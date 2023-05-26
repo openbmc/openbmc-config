@@ -37,9 +37,11 @@ def log(msg, args):
 
 
 def decode(arg, desc='stdout'):
-    obj = getattr(arg, desc)
-    return obj.decode('utf-8').strip()
-
+    if isinstance(arg, str):
+        obj = arg
+    else:
+        obj = getattr(arg, desc).decode('utf-8')
+    return obj.strip()
 
 def linesplit(words, sep, maxlen):
     """Use sep='\n' and maxlen=72 to split a long string into something
