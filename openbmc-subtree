@@ -224,8 +224,8 @@ def autocommit_reset(args, reset_info, original_head, new_head):
     cmdline = linesplit([basename] + sys.argv[1:], '\\\n    ', 72)
     autocommit_message += '\n{}'.format(cmdline)
     sh.git.add(os.path.basename(args.configfile), _cwd=workdir)
-    commit_args = ['-m', autocommit_message]
-    sh.git.commit(*commit_args, _cwd=workdir)
+    commit_args = ['-F', '-']
+    sh.git.commit(*commit_args, _cwd=workdir, _in=autocommit_message)
 
 
 def do_reset(args):
@@ -469,8 +469,8 @@ def autocommit_update(args, update_info, original_head, new_head):
     cmdline = linesplit([basename] + sys.argv[1:], '\\\n    ', 72)
     autocommit_message += '\n{}'.format(cmdline)
     sh.git.add(os.path.basename(args.configfile), _cwd=workdir)
-    commit_args = ['-m', autocommit_message]
-    sh.git.commit(*commit_args, _cwd=workdir)
+    commit_args = ['-F', '-']
+    sh.git.commit(*commit_args, _cwd=workdir, _in=autocommit_message)
 
 
 def main():
