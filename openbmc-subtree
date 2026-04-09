@@ -244,7 +244,9 @@ def do_reset(args):
 
     if args.config != args.newconfig:
         commit_msg = get_commit_message_for_reset(args, reset_subtrees)
-        commit_args = ['-e', '-m', commit_msg]
+        commit_args = ['-m', commit_msg]
+        if not args.no_edit:
+            commit_args.insert(0, '-e')
         if args.signoff:
             commit_args.insert(0, '-s')
 
@@ -433,7 +435,9 @@ def do_update(args):
     if hasattr(args, 'first-squash-commit') and args.squash:
         commit_msg = get_commit_message_for_squashed_update(
             list(all_update_info), args)
-        commit_args = ['--amend', '-e', '-m', commit_msg]
+        commit_args = ['--amend', '-m', commit_msg]
+        if not args.no_edit:
+            commit_args.insert(0, '-e')
         if args.signoff:
             commit_args.insert(0, '-s')
 
@@ -524,6 +528,7 @@ subtree.conf.'''
     autocommit_parsers = [update_parser, reset_parser]
     target_parsers = [update_parser, reset_parser]
     force_parsers = [update_parser, reset_parser]
+    no_edit_parsers = [update_parser, reset_parser]
 
     for p in verbose_parsers:
         p.add_argument(
@@ -568,6 +573,11 @@ subtree.conf.'''
         p.add_argument(
             '-f', '--force', dest='force', action='store_true',
             help='skip dirty tree validation')
+
+    for p in no_edit_parsers:
+        p.add_argument(
+            '--no-edit', dest='no_edit', action='store_true',
+            help='do not prompt to edit the commit message')
 
     args = parser.parse_args()
 
